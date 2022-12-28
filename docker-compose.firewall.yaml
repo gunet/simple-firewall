@@ -1,0 +1,26 @@
+version: "3.9"
+# a simple firewall
+services:
+  firewall:
+    image: gunet/simple-firewall
+    network_mode: "host"
+    cap_add:
+      - NET_ADMIN
+      - NET_RAW
+    depends_on:
+      - "<your main service name here>"
+    command:
+      - /bin/bash
+      - -c
+      - |
+        echo "nftables installed.."
+        /usr/sbin/nft flush chain filter DOCKER-USER
+        /usr/sbin/nft add rule filter DOCKER-USER ct state established counter accept
+        # set your own rules here
+        echo "firewall rules updated.."
+        trap "echo \"Flushing rules..\";/usr/sbin/nft flush chain filter DOCKER-USER; exit 0" SIGTERM
+        echo "sleeping for all infinity.."
+        while true
+        do
+        sleep 1
+        done

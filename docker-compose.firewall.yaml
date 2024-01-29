@@ -20,7 +20,4 @@ services:
         echo "firewall rules updated.."
         trap "echo \"Flushing rules..\";/usr/sbin/nft flush chain filter DOCKER-USER; exit 0" SIGTERM
         echo "sleeping for all infinity.."
-        while true
-        do
-        sleep 1
-        done
+        sleep infinity
